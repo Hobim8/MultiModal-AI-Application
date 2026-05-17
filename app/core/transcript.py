@@ -12,7 +12,7 @@ def extract_video_id(url: str) -> str:
                 "Invaild YouTube URL. Please provide a valid Youtube URL."
             )
         # Handle standard YouTube URLs
-        if parsed.netloc in ["www.youtube.com", "youtube.com", "youtu.be"]:
+        if parsed.netloc in ["www.youtube.com", "youtube.com"]:
             video_id = parse_qs(parsed.query).get("v")
             if not video_id:
                 raise ValueError(
@@ -37,4 +37,36 @@ def extract_video_id(url: str) -> str:
         )
 
 
+def fetch_transcript(url: str) -> dict:
+    """Fetch the transcript of the youtube video"""
+
+    video_id = extract_video_id(url)
+
+    try:
+        transcript_chunk = YouTubeTranscriptApi.get_transcript(video_id)
+        transcript = " ".join(
+            chunk["text"] for chunk in transcript_chunk 
+        ).strip()
+
+        return{
+            "video_id": video_id,
+            "transcript": transcript,
+            "transcript_length": len(transcript.split()),
+        } 
             
+    except TranscriptsDisabled:
+        raise ValueError(
+            "This video has transcripts disabled. Automatic transcription will be used as a fallback."
+        )
+    
+    except NoTranscriptFound:
+        raise ValueError(
+            "No transcript was found for this video. Automatic transcription will be used as a fallback."
+        )
+    
+    except Exception:
+        raise ValueError(
+            "Unable to retrieve the transcript. Please check the link or try a different video."
+        )
+
+
