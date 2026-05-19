@@ -7,6 +7,7 @@ from app.models.schemas import (
 )
 from app.core.transcript import fetch_transcript
 from app.core.embeddings import store_embeddings
+from app.core.retriever import query_video 
 from app.services.cache import is_video_cached, cache_video, get_cached_video
 
 router = APIRouter()
@@ -54,12 +55,27 @@ def ingest_video(request: IngestRequest):
 
 
 @router.post("/query", response_model=QueryResponse)
-def query_video(request: QueryRequest):
+def query_video_endpoint(request: QueryRequest):
     try:
+        # Check if video has been ingested first
+        if not is_video_cached(request.video_id):
+            raise HTTPException(
+                status_code=404,
+                detail="Video not found. Please ingest the video first."
+            )
+
+        result = query_video(request.video_id, request.question)
+
         return QueryResponse(
-            video_id=request.video_id, question=request.question, answer="Coming soon"
+            video_id=request.video_id,
+            question=request.question,
+            answer=result["answer"]
         )
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     except Exception:
         raise HTTPException(
-            status_code=500, detail="Unexpected error please try again."
+            status_code=500,
+            detail="An unexpected error occurred. Please try again."
         )
+
