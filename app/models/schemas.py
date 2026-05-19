@@ -24,4 +24,4 @@ class QueryResponse(BaseModel):
     video_id: str
     question: str
     answer: str
-    source_chunks: Optional[list[str]] = None
+    
