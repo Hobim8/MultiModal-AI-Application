@@ -1,13 +1,15 @@
 import tiktoken
-import google.generativeai as genai
+import google.genai as genai
 from langchain_redis import RedisVectorStore
 from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from langchain_core.documents import Document
 import os
 
 # initialize the embedding model
-embedding_model = GoogleGenerativeAIEmbeddings(
-    model="models/text-embedding-004", google_api_key=os.getenv("GEMINI_API_KEY")
+def get_embedding_model():
+    return GoogleGenerativeAIEmbeddings(
+    model="models/text-embedding-004", 
+    google_api_key=os.getenv("GEMINI_API_KEY")
 )
 
 #redis connection URL 
@@ -44,10 +46,9 @@ def store_embeddings(video_id: str, transcript: str) -> int:
 
     RedisVectorStore.from_documents(
         documents = documents,
-        embedding = embedding_model,
+        embedding = get_embedding_model(),
         redis_url = REDIS_URL,
         index_name=f"video:{video_id}",
     )
 
     return len(chunks)
-
