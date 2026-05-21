@@ -7,7 +7,7 @@ from app.models.schemas import (
 )
 from app.core.transcript import fetch_transcript
 from app.core.embeddings import store_embeddings
-from app.core.retriever import query_video 
+from app.core.retriever import query_video
 from app.services.cache import is_video_cached, cache_video, get_cached_video
 
 router = APIRouter()
@@ -37,21 +37,19 @@ def ingest_video(request: IngestRequest):
         cache_video(
             video_id=video_id,
             title="N/A",
-            transcript_lenght=result["transcript_length"],
+            transcript_length=result["transcript_length"],
         )
         return IngestResponse(
             video_id=video_id,
             title="N/A",
-            transcript_lenght=result["transcript_length"],
+            transcript_length=result["transcript_length"],
             message="Video ingested and ready for querying.",
         )
 
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    except Exception:
-        raise HTTPException(
-            status_code=500, detail="unexpected error occurred Please try again."
-        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
 
 
 @router.post("/query", response_model=QueryResponse)
@@ -61,7 +59,7 @@ def query_video_endpoint(request: QueryRequest):
         if not is_video_cached(request.video_id):
             raise HTTPException(
                 status_code=404,
-                detail="Video not found. Please ingest the video first."
+                detail="Video not found. Please ingest the video first.",
             )
 
         result = query_video(request.video_id, request.question)
@@ -69,13 +67,11 @@ def query_video_endpoint(request: QueryRequest):
         return QueryResponse(
             video_id=request.video_id,
             question=request.question,
-            answer=result["answer"]
+            answer=result["answer"],
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception:
         raise HTTPException(
-            status_code=500,
-            detail="An unexpected error occurred. Please try again."
+            status_code=500, detail="An unexpected error occurred. Please try again."
         )
-
