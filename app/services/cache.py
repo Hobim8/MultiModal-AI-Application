@@ -11,7 +11,7 @@ def is_video_cached(video_id: str) -> bool:
     return redis_client.exists(f"cached:video:{video_id}") == 1
 
 
-def cache_video(video_id: str, title: str, transcript_lenght: int) -> None:
+def cache_video(video_id: str, title: str, transcript_length: int) -> None:
     """Stores video metadata in redis after successful ingestion"""
     key = f"cached:video:{video_id}"
     redis_client.hset(
@@ -20,7 +20,7 @@ def cache_video(video_id: str, title: str, transcript_lenght: int) -> None:
         mapping={
             "video_id": video_id,
             "title": title,
-            "transcript_lenght": transcript_lenght,
+            "transcript_length": transcript_length,
         },
     )
     redis_client.expire(key, 640800)
