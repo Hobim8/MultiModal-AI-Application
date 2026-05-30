@@ -10,7 +10,7 @@ class IngestRequest(BaseModel):
 class IngestResponse(BaseModel):
     video_id: str
     title: str
-    transcript_lenght: int
+    transcript_length: int
     message: str
 
 
@@ -24,4 +24,3 @@ class QueryResponse(BaseModel):
     video_id: str
     question: str
     answer: str
-    

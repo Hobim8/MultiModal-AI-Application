@@ -71,7 +71,7 @@ def query_video_endpoint(request: QueryRequest):
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
-    except Exception:
+    except Exception as e:
         raise HTTPException(
             status_code=500, detail="An unexpected error occurred. Please try again."
         )

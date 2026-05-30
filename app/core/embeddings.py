@@ -34,17 +34,28 @@ def chunk_transcript(
 def store_embeddings(video_id: str, transcript: str) -> int:
     """Chunk transcript, embed each chunk and store in Redis."""
 
+    print(f"REDIS_URL: {os.getenv('REDIS_URL')}")
+    print(f"Transcript length: {len(transcript)}")
+
     chunks = chunk_transcript(transcript)
+    print(f"Chunks created: {len(chunks)}")
+
     documents = [
-        Document(page_content=chunk, metadata={"video_id": video_id, "chunk_index": i})
+        Document(
+            page_content=chunk,
+            metadata={"video_id": str(video_id), "chunk_index": str(i)},
+        )
         for i, chunk in enumerate(chunks)
     ]
+
+    print(f"First document content length: {len(documents[0].page_content)}")
+    print(f"First document metadata: {documents[0].metadata}")
 
     RedisVectorStore.from_documents(
         documents=documents,
         embedding=get_embedding_model(),
         redis_url=REDIS_URL,
-        index_name=f"video:{video_id}",
+        index_name=f"video_{video_id}",
     )
 
     return len(chunks)

@@ -15,7 +15,6 @@ def cache_video(video_id: str, title: str, transcript_length: int) -> None:
     """Stores video metadata in redis after successful ingestion"""
     key = f"cached:video:{video_id}"
     redis_client.hset(
-        f"cached:video:{video_id}",
         key,
         mapping={
             "video_id": video_id,
@@ -23,7 +22,7 @@ def cache_video(video_id: str, title: str, transcript_length: int) -> None:
             "transcript_length": transcript_length,
         },
     )
-    redis_client.expire(key, 640800)
+    redis_client.expire(key, 604800)
 
 
 def get_cached_video(video_id: str) -> dict | None:

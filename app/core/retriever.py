@@ -27,7 +27,7 @@ def retrieve_relevant_chunks(video_id: str, question: str, top_k: int = 5) -> li
     vector_store = RedisVectorStore(
         embedding=get_embedding_model(),
         redis_url=REDIS_URL,
-        index_name=f"video:{video_id}",
+        index_name=f"video_{video_id}",
     )
 
     results = vector_store.similarity_search(question, k=top_k)
