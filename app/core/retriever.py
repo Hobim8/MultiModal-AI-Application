@@ -1,7 +1,6 @@
 import os
 import google.genai as genai
 from langchain_redis import RedisVectorStore
-from langchain_google_genai import GoogleGenerativeAIEmbeddings
 from app.core.embeddings import get_embedding_model
 
 # Redis connection URL
