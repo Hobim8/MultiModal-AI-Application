@@ -1,5 +1,5 @@
 import tiktoken
-from google import genai
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_redis import RedisVectorStore
 from langchain_core.embeddings import Embeddings
 from langchain_core.documents import Document
@@ -8,30 +8,8 @@ import os
 REDIS_URL = os.getenv("REDIS_URL", "redis://localhost:6379")
 
 
-class GeminiEmbeddings(Embeddings):
-    """Custom embedding class using native Google genai SDK directly."""
-
-    def __init__(self):
-        self.client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-
-    def embed_documents(self, texts: list[str]) -> list[list[float]]:
-        embeddings = []
-        for text in texts:
-            result = self.client.models.embed_content(
-                model="text-embedding-004", contents=text
-            )
-            embeddings.append(result.embeddings[0].values)
-        return embeddings
-
-    def embed_query(self, text: str) -> list[float]:
-        result = self.client.models.embed_content(
-            model="text-embedding-004", contents=text
-        )
-        return result.embeddings[0].values
-
-
 def get_embedding_model():
-    return GeminiEmbeddings()
+    return HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-L6-v2")
 
 
 def chunk_transcript(
