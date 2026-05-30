@@ -77,3 +77,5 @@ def query_video(video_id: str, question: str) -> dict:
     )
 
     return {"answer": response.text}
+
+
