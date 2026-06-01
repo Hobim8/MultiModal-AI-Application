@@ -25,7 +25,7 @@ def retrieve_relevant_chunks(video_id: str, question: str, top_k: int = 5) -> li
     """Search Redis for the most relevant transcript chunks for a given question."""
 
     vector_store = RedisVectorStore(
-        embedding=get_embedding_model(),
+        embeddings=get_embedding_model(),
         redis_url=REDIS_URL,
         index_name=f"video_{video_id}",
     )
@@ -52,30 +52,26 @@ Answer the question based only on the context above.
 
 
 def query_video(video_id: str, question: str) -> dict:
-    """Retrieve relevant chunks and query Gemini for an answer."""
-
-    # Step 1 - Check if we have relevant chunks
+    print("STEP 1 - Retrieving chunks")
     chunks = retrieve_relevant_chunks(video_id, question)
+    print(f"STEP 1 DONE - Got {len(chunks)} chunks")
 
     if not chunks:
         return {
             "answer": "I could not find any relevant information in this video for your question.",
         }
 
-    # Step 2 - Build prompt
+    print("STEP 2 - Building prompt")
     prompt = build_prompt(chunks, question)
+    print("STEP 2 DONE")
 
-    # Step 3 - Call Gemini
+    print("STEP 3 - Calling Gemini")
     client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
-
     response = client.models.generate_content(
-        model="gemini-1.5-flash",
+        model="gemini-3.5-flash",
         contents=prompt,
-        config=types.GenerateContentConfig(
-            system_instruction=SYSTEM_PROMPT
-        )
+        config=types.GenerateContentConfig(system_instruction=SYSTEM_PROMPT),
     )
+    print("STEP 3 DONE")
 
     return {"answer": response.text}
-
-

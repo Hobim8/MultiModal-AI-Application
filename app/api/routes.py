@@ -55,14 +55,18 @@ def ingest_video(request: IngestRequest):
 @router.post("/query", response_model=QueryResponse)
 def query_video_endpoint(request: QueryRequest):
     try:
-        # Check if video has been ingested first
+        print(f"QUERY RECEIVED - video_id: {request.video_id}")
+        print(f"QUERY RECEIVED - question: {request.question}")
+
         if not is_video_cached(request.video_id):
             raise HTTPException(
                 status_code=404,
                 detail="Video not found. Please ingest the video first.",
             )
 
+        print("CACHE CHECK PASSED")
         result = query_video(request.video_id, request.question)
+        print(f"QUERY DONE - answer: {result['answer'][:50]}")
 
         return QueryResponse(
             video_id=request.video_id,
@@ -72,6 +76,4 @@ def query_video_endpoint(request: QueryRequest):
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
-        raise HTTPException(
-            status_code=500, detail="An unexpected error occurred. Please try again."
-        )
+        raise HTTPException(status_code=500, detail=f"Unexpected error: {str(e)}")
