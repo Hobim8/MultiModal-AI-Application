@@ -52,26 +52,21 @@ Answer the question based only on the context above.
 
 
 def query_video(video_id: str, question: str) -> dict:
-    print("STEP 1 - Retrieving chunks")
+
     chunks = retrieve_relevant_chunks(video_id, question)
-    print(f"STEP 1 DONE - Got {len(chunks)} chunks")
 
     if not chunks:
         return {
             "answer": "I could not find any relevant information in this video for your question.",
         }
 
-    print("STEP 2 - Building prompt")
     prompt = build_prompt(chunks, question)
-    print("STEP 2 DONE")
 
-    print("STEP 3 - Calling Gemini")
     client = genai.Client(api_key=os.getenv("GEMINI_API_KEY"))
     response = client.models.generate_content(
         model="gemini-3.1-flash-lite",
         contents=prompt,
         config=types.GenerateContentConfig(system_instruction=SYSTEM_PROMPT),
     )
-    print("STEP 3 DONE")
 
     return {"answer": response.text}
