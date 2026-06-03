@@ -65,8 +65,10 @@ document.getElementById("query-btn").addEventListener("click", async () => {
 
     if (response.ok) {
       answerBox.textContent = data.answer;
+      answerBox.classList.add("visible");
     } else {
       answerBox.textContent = `Error: ${data.detail}`;
+      answerBox.classList.add("visible");
     }
   } catch (error) {
     answerBox.textContent = "Something went wrong. Please try again.";
