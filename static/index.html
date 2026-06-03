@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YouTube Query AI</title>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>YouTube Query AI</h1>
+        <p>Submit a YouTube video and ask questions without watching it</p>
+    </header>
+
+    <!-- Ingest Section -->
+    <section id="ingest-section">
+        <h2>Submit a Video</h2>
+        <input type="text" id="video-url" placeholder="Paste YouTube URL here" />
+        <button id="ingest-btn">Ingest Video</button>
+        <p id="ingest-status"></p>
+    </section>
+
+    <!-- Query Section -->
+    <section id="query-section">
+        <h2>Ask a Question</h2>
+        <input type="text" id="question-input" placeholder="Ask anything about the video" />
+        <button id="query-btn">Ask</button>
+        <div id="answer-box"></div>
+    </section>
+
+    <!-- JavaScript will go here -->
+    <script src="/static/app.js"></script>
+</body>
+</html>
