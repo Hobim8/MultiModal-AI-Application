@@ -27,26 +27,26 @@ A multimodal AI application that allows users to query YouTube videos in natural
 
 ## Project Structure
 
-youtube-query-ai/
-├── app/
-│   ├── main.py                  # FastAPI entry point
-│   ├── api/
-│   │   └── routes.py            # /ingest and /query endpoints
-│   ├── core/
-│   │   ├── transcript.py        # YouTube transcript extraction
-│   │   ├── embeddings.py        # Chunking and Redis vector storage
-│   │   └── retriever.py         # RAG query logic and Gemini integration
-│   ├── services/
-│   │   └── cache.py             # Redis caching layer
-│   └── models/
-│       └── schemas.py           # Pydantic request/response models
-├── static/
-│   ├── index.html               # Frontend UI
-│   ├── style.css                # Styling
-│   └── app.js                   # Frontend JavaScript
-├── Dockerfile
-├── docker-compose.yml
-└── pyproject.toml
+    youtube-query-ai/
+    ├── app/
+    │   ├── main.py                  
+    │   ├── api/
+    │   │   └── routes.py            
+    │   ├── core/
+    │   │   ├── transcript.py        
+    │   │   ├── embeddings.py        
+    │   │   └── retriever.py         
+    │   ├── services/
+    │   │   └── cache.py             
+    │   └── models/
+    │       └── schemas.py           
+    ├── static/
+    │   ├── index.html               
+    │   ├── style.css                
+    │   └── app.js                   
+    ├── Dockerfile
+    ├── docker-compose.yml
+    └── pyproject.toml
 
 ## How It Works
 
